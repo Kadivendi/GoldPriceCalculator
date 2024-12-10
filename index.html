@@ -3,25 +3,516 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sai Akhila Jewellers - Gold Ornament Price Estimator</title>
-    <!-- Include React and ReactDOM libraries -->
-    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-    <!-- Include your CSS styles -->
-    <link rel="stylesheet" href="styles.css">
+    <title>Sai Akhila Jewellers - Gold Price Calculator</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background-color: #2b1810;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .header img {
+            max-width: 300px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: #d4af37;
+            margin: 10px 0;
+            font-size: 24px;
+        }
+
+        .header p {
+            color: #fff;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #d4af37;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #c4a137;
+        }
+
+        .stone-entry {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .remove-stone {
+            background-color: #dc3545;
+        }
+
+        .remove-stone:hover {
+            background-color: #c82333;
+        }
+
+        .results {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .results p {
+            margin: 10px 0;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+        }
+
+        .total-price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            background-color: #e8f5e9 !important;
+            padding: 15px !important;
+        }
+
+        .making-charges {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .making-charges input[type="checkbox"] {
+            width: auto;
+            margin-right: 5px;
+        }
+
+        .default-rate {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .number-input {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            font-size: 16px;
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .number-input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header img {
+                max-width: 200px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .making-charges {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        .stone-breakup {
+        background: #f0f0f0;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+        }
+        
+        .stone-breakup h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .stone-breakup p {
+            background: transparent;
+            padding: 4px 0;
+            margin: 4px 0;
+        }
+    </style>
 </head>
 <body>
-    <!-- Header, navigation, and other HTML content -->
-
-    <!-- Div where the React component will be rendered -->
     <div id="root"></div>
 
-    <!-- Include the GoldPriceEstimator component -->
-    <script src="src/components/GoldPriceEstimator.js"></script>
+    <script type="text/babel">
+        function App() {
+            const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+            const [password, setPassword] = React.useState('');
+            const correctPassword = 'saiakhila2024';
 
-    <script>
-        // Render the React component
-        ReactDOM.render(React.createElement(GoldPriceEstimator), document.getElementById('root'));
+            const handleLogin = (e) => {
+                e.preventDefault();
+                if (password === correctPassword) {
+                    setIsLoggedIn(true);
+                } else {
+                    alert('Incorrect password');
+                }
+            };
+
+            return isLoggedIn ? <GoldPriceEstimator /> : (
+                <div className="login-container">
+                    <h2 style={{textAlign: 'center', marginBottom: '20px'}}>Sai Akhila Jewellers</h2>
+                    <form onSubmit={handleLogin}>
+                        <div className="input-group">
+                            <label>Password:</label>
+                            <input 
+                                type="password" 
+                                value={password} 
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+            );
+        }
+
+        function GoldPriceEstimator() {
+            const [goldRate, setGoldRate] = React.useState();
+            const [grossWeight, setGrossWeight] = React.useState();
+            const [wastage, setWastage] = React.useState(14);
+            const [additionalCharges, setAdditionalCharges] = React.useState(0);
+            const [stones, setStones] = React.useState([]);
+            const [makingChargesValue, setMakingChargesValue] = React.useState(250);
+
+            const stoneRates = {
+                "Hall Mark": { rate: 2750 },
+                "CZ": { rate: 2750 },
+                "Diamond (DA)": { rate: 310000 },
+                "Emrald (EMD)": { rate: 5500 },
+                "Pearls (PER)": { rate: 1500 },
+                "Rad Polish (RMP)": { rate: 3000 },
+                "Ruby&CZ (R&C)": { rate: 3000 },
+                "Rubystone (RBS)": { rate: 3500 },
+                "Ruby&Emrald (R&E)": { rate: 3250 },
+                "Southsea pearl": { rate: 1500 },
+                "Tiger Nail (TGN)": { rate: 10000 },
+                "Uncut dia chakri (UDC)": { rate: 5000 },
+                "Uncut dia polki (UDP)": { rate: 5000 }
+            };
+
+            const addStone = () => {
+                setStones([...stones, { type: 'CZ', weight: 0, price: stoneRates['CZ'].rate }]);
+            };
+
+            const removeStone = (index) => {
+                setStones(stones.filter((_, i) => i !== index));
+            };
+
+            const updateStone = (index, field, value) => {
+                const newStones = [...stones];
+                newStones[index] = { ...newStones[index], [field]: value };
+                if (field === 'type') {
+                    // Set default price when stone type changes
+                    newStones[index].price = stoneRates[value] ? stoneRates[value].rate : 0;
+                }
+                setStones(newStones);
+            };
+
+            const getDefaultMakingChargeRate = (weight) => {
+                if (weight <= 5) return 250;
+                if (weight <= 10) return 150;
+                return 120;
+            };
+
+            const calculatePrice = () => {
+                const totalStoneWeight = stones.reduce((sum, stone) => sum + Number(stone.weight), 0);
+                const netGoldWeight = Number(grossWeight) - totalStoneWeight;
+                const baseGoldValue = netGoldWeight * goldRate;
+                
+                // Use making charges value directly, if empty use default
+                const makingChargeRate = makingChargesValue || getDefaultMakingChargeRate(grossWeight);
+                
+                const makingChargesTotal = netGoldWeight * makingChargeRate;
+                const wastageValue = (baseGoldValue * wastage) / 100;
+                const totalStonePrice = stones.reduce((sum, stone) => {
+                    return sum + (Number(stone.weight) * Number(stone.price));
+                }, 0);
+                const totalPrice = baseGoldValue + makingChargesTotal + wastageValue + totalStonePrice + Number(additionalCharges);
+
+                return {
+                    netGoldWeight: netGoldWeight.toFixed(3),
+                    baseGoldValue: baseGoldValue.toFixed(2),
+                    makingChargesTotal: makingChargesTotal.toFixed(2),
+                    makingChargeRate,
+                    wastageValue: wastageValue.toFixed(2),
+                    totalStonePrice: totalStonePrice.toFixed(2),
+                    totalPrice: totalPrice.toFixed(2)
+                };
+            };
+
+            const result = calculatePrice();
+            const defaultRate = getDefaultMakingChargeRate(grossWeight);
+
+            return (
+                <div className="container">
+                    <div className="header">
+                        <img src="images/logo.jpeg" alt="Sai Akhila Jewellers Logo" />
+                        <h1>Sai Akhila Jewellers</h1>
+                        <p>MG Road, Suryapet</p>
+                    </div>
+
+                    <div className="card">
+                        <div className="input-group">
+                            <label>Gold Rate (916/KDM) (₹/gram):</label>
+                            <input 
+                                type="text" 
+                                className="number-input"
+                                value={goldRate || ''} 
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                    if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                        setGoldRate(value === '' ? '' : value);
+                                    }
+                                }}
+                                placeholder="Enter KDM/916 gold rate"
+                            />
+                        </div>
+
+                        <div className="input-group">
+                            <label>Gross Weight (grams):</label>
+                            <input 
+                                type="text" 
+                                className="number-input"
+                                value={grossWeight || ''} 
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                    if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                        setGrossWeight(value === '' ? '' : value);
+                                    }
+                                }}
+                                placeholder="Enter weight"
+                            />
+                        </div>
+
+                        <div className="input-group">
+                            <label>Making Charges (₹/gram):</label>
+                            <input 
+                                type="text" 
+                                className="number-input"
+                                value={makingChargesValue || ''} 
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                    if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                        setMakingChargesValue(value === '' ? '' : value);
+                                    }
+                                }}
+                                placeholder="Default based on weight"
+                            />
+                            <div className="default-rate">
+                                Default: ≤5g: ₹250/g, 5-10g: ₹150/g, >10g: ₹120/g
+                            </div>
+                        </div>
+
+                        <div className="input-group">
+                            <label>Wastage (% percentage):</label>
+                            <input 
+                                type="text" 
+                                className="number-input"
+                                value={wastage || ''} 
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                    if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                        setWastage(value === '' ? '' : value);
+                                    }
+                                }}
+                                placeholder="Enter wastage percentage"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="card">
+                        <h3>Stones</h3>
+                        {stones.map((stone, index) => (
+                            <div key={index} className="stone-entry">
+                                <div className="input-group">
+                                    <label>Stone Type:</label>
+                                    <select 
+                                        value={stone.type}
+                                        onChange={(e) => updateStone(index, 'type', e.target.value)}
+                                    >
+                                        {Object.keys(stoneRates).map(type => (
+                                            <option key={type} value={type}>{type} (₹{stoneRates[type].rate}/g)</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="input-group">
+                                    <label>Weight (grams):</label>
+                                    <input 
+                                        type="text"
+                                        className="number-input"
+                                        value={stone.weight || ''}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                            if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                                updateStone(index, 'weight', value === '' ? '' : value);
+                                            }
+                                        }}
+                                        placeholder="Enter stone weight"
+                                    />
+                                </div>
+                                <div className="input-group">
+                                    <label>Price (₹/gram):</label>
+                                    <input 
+                                        type="text"
+                                        className="number-input"
+                                        value={stone.price || ''}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                            if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                                updateStone(index, 'price', value === '' ? '' : value);
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <button className="remove-stone" onClick={() => removeStone(index)}>
+                                    Remove Stone
+                                </button>
+                            </div>
+                        ))}
+                        <button onClick={addStone}>Add Stone</button>
+                    </div>
+
+                    <div className="card">
+                        <div className="input-group">
+                            <label>Additional Charges (₹):</label>
+                            <input 
+                                type="text" 
+                                className="number-input"
+                                value={additionalCharges || ''} 
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                    if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                        setAdditionalCharges(value === '' ? '' : value);
+                                    }
+                                }}
+                                placeholder="Enter additional charges"
+                            />
+                        </div>
+                    </div>
+
+                    
+                    <div className="card results">
+                        <h3>Price Estimation</h3>
+                        <p>Gross Weight: {grossWeight} grams</p>
+                        <p>Net Gold Weight (minus stone weight): {result.netGoldWeight} grams</p>
+                        <p>Gold Value (₹{goldRate}/g): ₹{result.baseGoldValue}</p>
+                        <p>Tarugu/Wastage Value: ₹{result.wastageValue} ({wastage}%)</p>
+                        
+                        {/* Stone Breakup Section */}
+                        <div className="stone-breakup">
+                            <h4>Stone Details:</h4>
+                            {stones.map((stone, index) => (
+                                <p key={index}>
+                                    {stone.type}: {stone.weight}g × ₹{stone.price}/g = ₹{(stone.weight * stone.price).toFixed(2)}
+                                </p>
+                            ))}
+                            <p><strong>Total Stone Price: ₹{result.totalStonePrice}</strong></p>
+                        </div>
+                        
+                        <p>Making Charges: ₹{result.makingChargesTotal} ({result.makingChargeRate}/gram)</p>
+                        <p>Additional Charges: ₹{additionalCharges}</p>
+                        <p className="total-price">Total Estimated Price: ₹{result.totalPrice}</p>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
