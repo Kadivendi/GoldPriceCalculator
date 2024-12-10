@@ -3,185 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sai Akhila Jewellers - Gold Price Estimator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-            color: #666;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #result, #login-section, #calculator-section {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .hidden {
-            display: none;
-        }
-        .error {
-            color: red;
-            margin-top: 10px;
-        }
-        .disclaimer {
-            font-size: 0.8em;
-            color: #666;
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
+    <title>Sai Akhila Jewellers - Gold Ornament Price Estimator</title>
+    <!-- Include React and ReactDOM libraries -->
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!-- Include your CSS styles -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Sai Akhila Jewellers</h1>
-        
-        <div id="login-section">
-            <h2>Login</h2>
-            <label for="password">Enter Password:</label>
-            <input type="password" id="password" placeholder="Enter password">
-            <button onclick="login()">Login</button>
-            <div id="login-error" class="error"></div>
-        </div>
+    <!-- Header, navigation, and other HTML content -->
 
-        <div id="calculator-section" class="hidden">
-            <h2>Gold Ornament Price Estimator</h2>
-            
-            <label for="purity">Gold Purity:</label>
-            <select id="purity">
-                <option value="22">22 Karat</option>
-                <option value="18">18 Karat</option>
-                <option value="14">14 Karat</option>
-            </select>
+    <!-- Div where the React component will be rendered -->
+    <div id="root"></div>
 
-            <label for="weight">Weight (in grams):</label>
-            <input type="number" id="weight" step="0.1" min="0" placeholder="Enter ornament weight">
-
-            <label for="currentRate">Current Gold Rate (₹/gram):</label>
-            <input type="number" id="currentRate" placeholder="Enter current gold rate">
-
-            <label for="makingCharges">Making Charges (%):</label>
-            <input type="number" id="makingCharges" placeholder="Enter making charges percentage">
-
-            <button onclick="calculatePrice()">Calculate Price</button>
-
-            <div id="result"></div>
-
-            <button onclick="logout()" style="background-color: #f44336; margin-top: 10px;">Logout</button>
-        </div>
-
-        <div class="disclaimer">
-            Disclaimer: This is an estimated price. Actual price may vary based on market conditions.
-        </div>
-    </div>
+    <!-- Include the GoldPriceEstimator component -->
+    <script src="src/components/GoldPriceEstimator.js"></script>
 
     <script>
-        // Store the password as a variable (you can change this)
-        const STORE_PASSWORD = 'saiakhila2024';
-
-        function login() {
-            const passwordInput = document.getElementById('password');
-            const loginError = document.getElementById('login-error');
-            const loginSection = document.getElementById('login-section');
-            const calculatorSection = document.getElementById('calculator-section');
-
-            if (passwordInput.value === STORE_PASSWORD) {
-                // Successful login
-                loginSection.classList.add('hidden');
-                calculatorSection.classList.remove('hidden');
-                loginError.textContent = '';
-            } else {
-                // Failed login
-                loginError.textContent = 'Incorrect password. Please try again.';
-                passwordInput.value = ''; // Clear the password input
-            }
-        }
-
-        function logout() {
-            const loginSection = document.getElementById('login-section');
-            const calculatorSection = document.getElementById('calculator-section');
-            const passwordInput = document.getElementById('password');
-            const result = document.getElementById('result');
-
-            // Reset to login screen
-            loginSection.classList.remove('hidden');
-            calculatorSection.classList.add('hidden');
-            passwordInput.value = ''; // Clear password
-            result.innerHTML = ''; // Clear previous calculation
-        }
-
-        function calculatePrice() {
-            // Get input values
-            const purity = parseFloat(document.getElementById('purity').value);
-            const weight = parseFloat(document.getElementById('weight').value);
-            const currentRate = parseFloat(document.getElementById('currentRate').value);
-            const makingCharges = parseFloat(document.getElementById('makingCharges').value);
-
-            // Validate inputs
-            if (isNaN(weight) || isNaN(currentRate) || isNaN(makingCharges)) {
-                alert('Please fill in all fields with valid numbers');
-                return;
-            }
-
-            // Calculate base gold value
-            const goldValuePercentage = purity / 24;
-            const baseGoldValue = weight * currentRate * goldValuePercentage;
-
-            // Calculate making charges
-            const makingChargesValue = baseGoldValue * (makingCharges / 100);
-
-            // Calculate total price
-            const totalPrice = baseGoldValue + makingChargesValue;
-
-            // Display result
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `
-                <p>Gold Value: ₹${baseGoldValue.toFixed(2)}</p>
-                <p>Making Charges: ₹${makingChargesValue.toFixed(2)}</p>
-                <p>Total Estimated Price: ₹${totalPrice.toFixed(2)}</p>
-            `;
-        }
-
-        // Allow login by pressing Enter key
-        document.getElementById('password').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                login();
-            }
-        });
+        // Render the React component
+        ReactDOM.render(React.createElement(GoldPriceEstimator), document.getElementById('root'));
     </script>
 </body>
 </html>
