@@ -1,0 +1,2 @@
+# GoldPriceCalculator
+Calculates gold price
