@@ -222,6 +222,57 @@
             padding: 4px 0;
             margin: 4px 0;
         }
+
+        /* Add this to your existing <style> section */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0;
+            }
+            
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .print-only {
+                display: block !important;
+            }
+
+            button {
+                display: none !important;
+            }
+
+            .results {
+                page-break-inside: avoid;
+            }
+
+            .header {
+                background-color: white !important;
+            }
+
+            .header h1 {
+                color: black !important;
+            }
+
+            .header p {
+                color: black !important;
+            }
+        }
+
+        .print-button {
+            background-color: #4CAF50 !important;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -487,26 +538,44 @@
 
                     
                     <div className="card results">
-                        <h3>Price Estimation</h3>
-                        <p>Gross Weight: {grossWeight} grams</p>
-                        <p>Net Gold Weight (minus stone weight): {result.netGoldWeight} grams</p>
-                        <p>Gold Value (₹{goldRate}/g): ₹{result.baseGoldValue}</p>
-                        <p>Tarugu/Wastage Value: ₹{result.wastageValue} ({wastage}%)</p>
-                        
-                        {/* Stone Breakup Section */}
-                        <div className="stone-breakup">
-                            <h4>Stone Details:</h4>
-                            {stones.map((stone, index) => (
-                                <p key={index}>
-                                    {stone.type}: {stone.weight}g × ₹{stone.price}/g = ₹{(stone.weight * stone.price).toFixed(2)}
-                                </p>
-                            ))}
-                            <p><strong>Total Stone Price: ₹{result.totalStonePrice}</strong></p>
+                        <div style={{ textAlign: 'center', marginBottom: '20px' }} className="print-only">
+                            <h2>Price Estimation Receipt</h2>
+                            <p>Date: {new Date().toLocaleDateString()}</p>
+                            <hr style={{ margin: '10px 0' }} />
                         </div>
-                        
-                        <p>Making Charges: ₹{result.makingChargesTotal} ({result.makingChargeRate}/gram)</p>
-                        <p>Additional Charges: ₹{additionalCharges}</p>
-                        <p className="total-price">Total Estimated Price: ₹{result.totalPrice}</p>
+                    <p>Gross Weight: {grossWeight} grams</p>
+                    <p>Net Gold Weight (minus stone weight): {result.netGoldWeight} grams</p>
+                    <p>Gold Value (₹{goldRate}/g): ₹{result.baseGoldValue}</p>
+                    <p>Tarugu/Wastage Value: ₹{result.wastageValue} ({wastage}%)</p>
+                    
+                    {/* Stone Breakup Section */}
+                    <div className="stone-breakup">
+                        <h4>Stone Details:</h4>
+                        {stones.map((stone, index) => (
+                            <p key={index}>
+                                {stone.type}: {stone.weight}g × ₹{stone.price}/g = ₹{(stone.weight * stone.price).toFixed(2)}
+                            </p>
+                        ))}
+                        <p><strong>Total Stone Price: ₹{result.totalStonePrice}</strong></p>
+                    </div>
+                    
+                    <p>Making Charges: ₹{result.makingChargesTotal} ({result.makingChargeRate}/gram)</p>
+                    <p>Additional Charges: ₹{additionalCharges}</p>
+                    <p className="total-price">Total Estimated Price: ₹{result.totalPrice}</p>
+
+                    <div className="print-only" style={{ marginTop: '30px', borderTop: '1px solid #ddd', paddingTop: '20px' }}>
+                        <p style={{ textAlign: 'center' }}>Thank you for choosing Sai Akhila Jewellers</p>
+                        <p style={{ textAlign: 'center' }}>MG Road, Suryapet</p>
+                        <p style={{ textAlign: 'center' }}>This is a computer generated estimate</p>
+                    </div>
+
+                    <button 
+                        className="print-button" 
+                        onClick={() => window.print()}
+                        style={{ marginTop: '20px' }}
+                    >
+                        Print Estimate
+                    </button>
                     </div>
                 </div>
             );
