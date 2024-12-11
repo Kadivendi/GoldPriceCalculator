@@ -227,19 +227,25 @@
         }
 
         /* Add this to your existing <style> section */
+        @page {
+            size: auto;
+            /* Auto is the default value */
+            margin: 0;
+            /* Remove all margins */
+        }
+
         @media print {
-            /* Hide everything by default */
+
+            /* Keep existing print styles */
             body * {
                 visibility: hidden;
             }
 
-            /* Only show the results card and its contents */
             .results,
             .results * {
                 visibility: visible;
             }
 
-            /* Position the results card at the top of the page */
             .results {
                 position: absolute;
                 left: 0;
@@ -247,46 +253,58 @@
                 width: 100%;
                 padding: 20px;
                 margin: 0;
+                /* Remove any margin to prevent headers/footers */
+                page-break-after: avoid;
+                page-break-before: avoid;
             }
 
-            /* Hide the original header */
-            .header {
-                display: none;
+            /* Hide all headers and footers */
+            header,
+            footer {
+                display: none !important;
             }
 
-            /* Hide the print button */
+            /* Reset all margins and padding for print */
+            @page {
+                margin: 0;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            /* Hide the print button when printing */
             .print-button {
                 display: none !important;
             }
 
-            /* Make sure background colors print */
+            /* Force backgrounds to print */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 color-adjust: exact !important;
             }
 
-            /* Style the logo container in results */
-            .results .logo-container {
+            /* Maintain the brown header background */
+            .results .logo-container,
+            div[style*="backgroundColor: #2b1810"] {
                 background-color: #2b1810 !important;
-                padding: 15px;
-                text-align: center;
-                margin-bottom: 20px;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
             }
 
-            /* Style the divider */
-            .results .divider {
-                border-top: 1px solid #ddd;
-                margin: 10px 0;
-            }
-
-            /* Maintain background colors */
+            /* Maintain stone breakup background */
             .stone-breakup {
                 background: #f0f0f0 !important;
+                -webkit-print-color-adjust: exact !important;
             }
 
+            /* Maintain total price background */
             .total-price {
                 background-color: #e8f5e9 !important;
+                -webkit-print-color-adjust: exact !important;
             }
         }
 
@@ -729,6 +747,20 @@
                                     </select>
                                 </div>
                                 <div className="input-group">
+                                    <label>{translations[language].stonePrice}</label>
+                                    <input
+                                        type="text"
+                                        className="number-input"
+                                        value={stone.price || ''}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                            if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                                updateStone(index, 'price', value === '' ? '' : value);
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div className="input-group">
                                     <label>{translations[language].stoneWeight}</label>
                                     <input
                                         type="text"
@@ -743,20 +775,7 @@
                                         placeholder={translations[language].pstoneWeight}
                                     />
                                 </div>
-                                <div className="input-group">
-                                    <label>{translations[language].stonePrice}</label>
-                                    <input
-                                        type="text"
-                                        className="number-input"
-                                        value={stone.price || ''}
-                                        onChange={(e) => {
-                                            const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
-                                            if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
-                                                updateStone(index, 'price', value === '' ? '' : value);
-                                            }
-                                        }}
-                                    />
-                                </div>
+
                                 <button className="remove-stone" onClick={() => removeStone(index)}>
                                     {translations[language].removeStone}
                                 </button>
