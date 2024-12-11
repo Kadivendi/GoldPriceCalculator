@@ -387,6 +387,9 @@
     <script type="text/babel">
         const translations = {
             en: {
+
+                tags: "Tag Number:",
+                tagPlaceholder: "Enter tag number",
                 // Header
                 title: "Sai Akhila Jewellers",
                 address: "Besides Axis Bank, MG Road, Suryapet, Cell: 9948021254",
@@ -449,6 +452,9 @@
                 "Uncut dia polki (UDP)": "Uncut Dia Polki (UDP)"
             },
             te: {
+
+                tags: "ట్యాగ్ నంబర్:",
+                tagPlaceholder: "ట్యాగ్ నంబర్ ఎంటర్ చేయండి",
                 // Header
                 title: "సాయి అఖిల జ్యూవెలర్స్",
                 address: "యాక్సిస్ బ్యాంక్ పక్కన, ఎంజీ రోడ్, సూర్యాపేట, సెల్: 9948021254",
@@ -572,6 +578,7 @@
             const [additionalCharges, setAdditionalCharges] = React.useState(0);
             const [stones, setStones] = React.useState([]);
             const [makingChargesValue, setMakingChargesValue] = React.useState(250);
+            const [tag, setTag] = React.useState('');
 
             const stoneRates = {
                 "Beads (BDS)": { rate: 600 },
@@ -665,6 +672,16 @@
                     </div>
 
                     <div className="card">
+                        <div className="input-group">
+                            <label>{translations[language].tags}</label>
+                            <input
+                                type="text"
+                                className="number-input"
+                                value={tag || ''}
+                                onChange={(e) => setTag(e.target.value)}
+                                placeholder={translations[language].tagPlaceholder}
+                            />
+                        </div>
                         <div className="input-group">
                             <label>{translations[language].goldRate}</label>
                             <input
@@ -826,6 +843,7 @@
                             <p>{translations[language].date} {new Date().toLocaleDateString()}</p>
                             <hr style={{ margin: '10px 0' }} />
                         </div>
+                        <p> {translations[language].tags} {tag}</p>
                         <p>{translations[language].grossWeight} {grossWeight} grams</p>
                         <p>{translations[language].netGoldWeight} {result.netGoldWeight} grams</p>
                         <p>{translations[language].goldValue} (₹{goldRate}/g): ₹{result.baseGoldValue}</p>
