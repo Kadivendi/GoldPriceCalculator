@@ -228,53 +228,137 @@
 
         /* Add this to your existing <style> section */
         @media print {
-            body {
-                background: white;
+            /* Hide everything by default */
+            body * {
+                visibility: hidden;
             }
 
-            .container {
-                max-width: 100%;
-                padding: 0;
+            /* Only show the results card and its contents */
+            .results,
+            .results * {
+                visibility: visible;
             }
 
-            .card {
-                box-shadow: none;
-                border: 1px solid #ddd;
-                break-inside: avoid;
-            }
-
-            .no-print {
-                display: none !important;
-            }
-
-            .print-only {
-                display: block !important;
-            }
-
-            button {
-                display: none !important;
-            }
-
+            /* Position the results card at the top of the page */
             .results {
-                page-break-inside: avoid;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                margin: 0;
             }
 
+            /* Hide the original header */
             .header {
-                background-color: white !important;
+                display: none;
             }
 
-            .header h1 {
-                color: black !important;
+            /* Hide the print button */
+            .print-button {
+                display: none !important;
             }
 
-            .header p {
-                color: black !important;
+            /* Make sure background colors print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            /* Style the logo container in results */
+            .results .logo-container {
+                background-color: #2b1810 !important;
+                padding: 15px;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            /* Style the divider */
+            .results .divider {
+                border-top: 1px solid #ddd;
+                margin: 10px 0;
+            }
+
+            /* Maintain background colors */
+            .stone-breakup {
+                background: #f0f0f0 !important;
+            }
+
+            .total-price {
+                background-color: #e8f5e9 !important;
             }
         }
 
         .print-button {
             background-color: #4CAF50 !important;
             margin-bottom: 20px;
+        }
+
+        .default-rate {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .default-rate-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .default-rate-content.show {
+            max-height: 50px;
+        }
+
+        .default-rate-toggle {
+            color: #d4af37;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Add these right after your other styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+            max-width: 300px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 8px;
+            border: none;
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -442,6 +526,26 @@
             );
         }
 
+        function DefaultRateInfo() {
+            const [showModal, setShowModal] = React.useState(false);
+
+            return (
+                <div style={{ display: 'inline' }}>
+                    <span className="info-icon" onClick={() => setShowModal(true)}>i</span>
+                    {showModal && (
+                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                            <div className="modal-content" onClick={e => e.stopPropagation()}>
+                                <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Default Making Charges</div>
+                                • For weight ≤ 5g: ₹250/g<br />
+                                • For weight 5-10g: ₹150/g<br />
+                                • For weight > 10g: ₹120/g
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
         function GoldPriceEstimator() {
             const [language, setLanguage] = React.useState('en');
             const [goldRate, setGoldRate] = React.useState();
@@ -452,16 +556,17 @@
             const [makingChargesValue, setMakingChargesValue] = React.useState(250);
 
             const stoneRates = {
-                "Hall Mark": { rate: 2750 },
+                "Beads (BDS)": { rate: 600 },
+                "Kolkata Beads (KBS)": { rate: 360 },
                 "CZ": { rate: 2750 },
                 "Diamond (DA)": { rate: 310000 },
-                "Emrald (EMD)": { rate: 5500 },
+                "Emerald (EMD)": { rate: 5500 },
                 "Pearls (PER)": { rate: 1500 },
-                "Rad Polish (RMP)": { rate: 3000 },
+                "South Sea Pearls (SSP)": { rate: 3000 },
                 "Ruby&CZ (R&C)": { rate: 3000 },
                 "Rubystone (RBS)": { rate: 3500 },
                 "Ruby&Emrald (R&E)": { rate: 3250 },
-                "Southsea pearl": { rate: 1500 },
+                "Southsea pearl (SSP)": { rate: 1500 },
                 "Tiger Nail (TGN)": { rate: 10000 },
                 "Uncut dia chakri (UDC)": { rate: 5000 },
                 "Uncut dia polki (UDP)": { rate: 5000 }
@@ -604,9 +709,7 @@
                                 }}
                                 placeholder=""
                             />
-                            <div className="default-rate">
-                                Default: ≤5g: ₹250/g, 5-10g: ₹150/g, >10g: ₹120/g
-                            </div>
+                            <DefaultRateInfo />
                         </div>
                     </div>
 
@@ -621,7 +724,7 @@
                                         onChange={(e) => updateStone(index, 'type', e.target.value)}
                                     >
                                         {Object.keys(stoneRates).map(type => (
-                                            <option key={type} value={type}>{type} (₹{stoneRates[type].rate}/g)</option>
+                                            <option key={type} value={type}>{type}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -682,7 +785,24 @@
 
 
                     <div className="card results">
-                        <div style={{ textAlign: 'center', marginBottom: '20px' }} className="print-only">
+                        {/* Print-only header with logo */}
+                        <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+                            <div style={{
+                                backgroundColor: '#2b1810',
+                                padding: '10px',
+                                width: '100%',
+                                marginBottom: '7.5px'
+                            }}>
+                                <img
+                                    src="images/logo.jpeg"
+                                    alt="Sai Akhila Jewellers Logo"
+                                    style={{
+                                        width: '100px',
+                                        display: 'block',
+                                        margin: '0 auto'
+                                    }}
+                                />
+                            </div>
                             <h2>{translations[language].priceEstimation}</h2>
                             <p>{translations[language].date} {new Date().toLocaleDateString()}</p>
                             <hr style={{ margin: '10px 0' }} />
@@ -692,7 +812,6 @@
                         <p>{translations[language].goldValue} (₹{goldRate}/g): ₹{result.baseGoldValue}</p>
                         <p>{translations[language].wastageValue} ₹{result.wastageValue} ({wastage}%)</p>
 
-                        {/* Stone Breakup Section */}
                         <div className="stone-breakup">
                             <h4>{translations[language].stoneDetails}</h4>
                             {stones.map((stone, index) => (
@@ -707,7 +826,7 @@
                         <p>{translations[language].additionalCharges} ₹{additionalCharges}</p>
                         <p className="total-price">{translations[language].totalPrice} ₹{result.totalPrice}</p>
 
-                        <div className="print-only" style={{ marginTop: '30px', borderTop: '1px solid #ddd', paddingTop: '20px' }}>
+                        <div style={{ marginTop: '30px', borderTop: '1px solid #ddd', paddingTop: '20px' }}>
                             <p style={{ textAlign: 'center' }}>{translations[language].thankYou}</p>
                             <p style={{ textAlign: 'center' }}>{translations[language].address}</p>
                             <p style={{ textAlign: 'center' }}>{translations[language].computerGenerated}</p>
@@ -718,7 +837,7 @@
                             onClick={() => window.print()}
                             style={{ marginTop: '20px' }}
                         >
-                        {translations[language].printEstimate}
+                            {translations[language].printEstimate}
                         </button>
                     </div>
                 </div>
