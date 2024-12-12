@@ -541,7 +541,7 @@
                 const weight = parseFloat(grossWeight) || 0;
                 const rate = parseFloat(silverRate) || 0;
                 const wastagePercent = parseFloat(wastage) || 0;
-                const making = parseFloat(makingChargesValue) || getDefaultMakingChargeRate(weight);
+                const making = parseFloat(makingChargesValue) || 0;
                 const additional = parseFloat(additionalCharges) || 0;
 
                 const baseSilverValue = weight * rate;
