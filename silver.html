@@ -1,0 +1,734 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sai Akhila Jewellers - Silver Price Calculator</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <!-- Use the same styles as gold.html -->
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+    
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+    
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background-color: #2b1810;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+    
+        .header img {
+            max-width: 300px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+    
+        .header h1 {
+            color: #d4af37;
+            margin: 10px 0;
+            font-size: 24px;
+        }
+    
+        .header p {
+            color: #fff;
+        }
+    
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    
+        .input-group {
+            margin-bottom: 15px;
+        }
+    
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+    
+        input,
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+    
+        button {
+            background-color: #d4af37;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    
+        button:hover {
+            background-color: #c4a137;
+        }
+    
+        .stone-entry {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+    
+        .remove-stone {
+            background-color: #dc3545;
+        }
+    
+        .remove-stone:hover {
+            background-color: #c82333;
+        }
+    
+        .results {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+        }
+    
+        .results p {
+            margin: 10px 0;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+        }
+    
+        .total-price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            background-color: #e8f5e9 !important;
+            padding: 15px !important;
+        }
+    
+        .making-charges {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+    
+        .making-charges input[type="checkbox"] {
+            width: auto;
+            margin-right: 5px;
+        }
+    
+        .default-rate {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    
+        h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+    
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    
+        .number-input {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            font-size: 16px;
+            width: 100%;
+            border-radius: 4px;
+        }
+    
+        .number-input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
+        }
+    
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+    
+            .header img {
+                max-width: 200px;
+            }
+    
+            .card {
+                padding: 15px;
+            }
+    
+            .making-charges {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+    
+            .nav-buttons {
+                top: 10px;
+                right: 10px;
+                gap: 8px;
+            }
+    
+            .nav-button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+    
+        .stone-breakup {
+            background: #f0f0f0;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+    
+        .stone-breakup h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+    
+        .stone-breakup p {
+            background: transparent;
+            padding: 4px 0;
+            margin: 4px 0;
+        }
+    
+        /* Add this to your existing <style> section */
+        @page {
+            size: auto;
+            /* Auto is the default value */
+            margin: 0;
+            /* Remove all margins */
+        }
+    
+        .nav-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+    
+        .nav-button {
+            background-color: #2b1810;
+            color: #d4af37;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+        }
+    
+        .nav-button:hover {
+            background-color: #d4af37;
+            color: #2b1810;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    
+        @media print {
+    
+            .nav-buttons {
+                display: none !important;
+            }
+    
+            /* Keep existing print styles */
+            body * {
+                visibility: hidden;
+            }
+    
+            .results,
+            .results * {
+                visibility: visible;
+            }
+    
+            .results {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                margin: 0;
+                /* Remove any margin to prevent headers/footers */
+                page-break-after: avoid;
+                page-break-before: avoid;
+            }
+    
+            /* Hide all headers and footers */
+            header,
+            footer {
+                display: none !important;
+            }
+    
+            /* Reset all margins and padding for print */
+            @page {
+                margin: 0;
+            }
+    
+            body {
+                margin: 0;
+                padding: 0;
+            }
+    
+            /* Hide the print button when printing */
+            .print-button {
+                display: none !important;
+            }
+    
+            /* Force backgrounds to print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+    
+            /* Maintain the brown header background */
+            .results .logo-container,
+            div[style*="backgroundColor: #2b1810"] {
+                background-color: #2b1810 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+    
+            /* Maintain stone breakup background */
+            .stone-breakup {
+                background: #f0f0f0 !important;
+                -webkit-print-color-adjust: exact !important;
+            }
+    
+            /* Maintain total price background */
+            .total-price {
+                background-color: #e8f5e9 !important;
+                -webkit-print-color-adjust: exact !important;
+            }
+        }
+    
+        .print-button {
+            background-color: #4CAF50 !important;
+            margin-bottom: 20px;
+        }
+    
+        .default-rate {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+    
+        .default-rate-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            color: #666;
+            font-size: 0.9em;
+        }
+    
+        .default-rate-content.show {
+            max-height: 50px;
+        }
+    
+        .default-rate-toggle {
+            color: #d4af37;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    
+        /* Add these right after your other styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+    
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+            max-width: 300px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 8px;
+            border: none;
+            vertical-align: middle;
+        }
+    
+        .silver-info {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+            font-style: italic;
+        }
+    
+        .purity-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const translations = {
+            en: {
+                title: "Sai Akhila Jewellers",
+                address: "Besides Axis Bank, MG Road, Suryapet, Cell: 9948021254",
+                
+                silverRate: "Silver Rate (₹/gram):",
+                grossWeight: "Weight (grams):",
+                wastage: "Wastage (%):",
+                makingCharges: "Making Charges (₹/gram):",
+                additionalCharges: "Additional Charges (₹):",
+                
+                priceEstimation: "Silver Price Estimation Receipt",
+                date: "Date:",
+                silverValue: "Silver Value:",
+                wastageValue: "Wastage Value:",
+                makingChargesTotal: "Making Charges:",
+                totalPrice: "Total Estimated Price:",
+                thankYou: "Thank you for choosing Sai Akhila Jewellers",
+                computerGenerated: "This is a computer generated estimate",
+                printEstimate: "Print Estimate",
+                
+                psilverRate: "Enter silver rate",
+                pgrossWeight: "Enter weight",
+                pwastage: "Enter wastage percentage",
+                pmakingCharges: "Default based on weight",
+                padditionalCharges: "Enter additional charges"
+            },
+            te: {
+                title: "సాయి అఖిల జ్యూవెలర్స్",
+                address: "యాక్సిస్ బ్యాంక్ పక్కన, ఎంజీ రోడ్, సూర్యాపేట, సెల్: 9948021254",
+                
+                silverRate: "వెండి ధర (₹/గ్రాము):",
+                grossWeight: "మొత్తం బరువు (గ్రాములు):",
+                wastage: "తరుగు (%):",
+                makingCharges: "తయారీ ఛార్జీలు (₹/గ్రాము):",
+                additionalCharges: "అదనపు ఛార్జీలు (₹):",
+                
+                priceEstimation: "వెండి ధర అంచనా రసీదు",
+                date: "తేదీ:",
+                silverValue: "వెండి విలువ:",
+                wastageValue: "తరుగు విలువ:",
+                makingChargesTotal: "తయారీ ఛార్జీలు:",
+                totalPrice: "మొత్తం అంచనా ధర:",
+                thankYou: "సాయి అఖిల జ్యూవెలర్స్ ని ఎంచుకున్నందుకు ధన్యవాదాలు",
+                computerGenerated: "ఇది కంప్యూటర్ ద్వారా తయారు చేయబడిన అంచనా",
+                printEstimate: "అంచనా ముద్రించు",
+                
+                psilverRate: "వెండి రేటు నమోదు చేయండి",
+                pgrossWeight: "బరువు నమోదు చేయండి",
+                pwastage: "తరుగు శాతం నమోదు చేయండి",
+                pmakingCharges: "బరువు ఆధారంగా డిఫాల్ట్",
+                padditionalCharges: "అదనపు ఛార్జీలు నమోదు చేయండి"
+            }
+        };
+
+        function DefaultRateInfo() {
+            const [showModal, setShowModal] = React.useState(false);
+
+            return (
+                <div style={{ display: 'inline' }}>
+                    <span className="info-icon" onClick={() => setShowModal(true)}>i</span>
+                    {showModal && (
+                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                            <div className="modal-content" onClick={e => e.stopPropagation()}>
+                                <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Default Making Charges</div>
+                                • For weight ≤ 100g: ₹15/g<br />
+                                • For weight 100-250g: ₹12/g<br />
+                                • For weight > 250g: ₹10/g
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function SilverPriceEstimator() {
+            const [language, setLanguage] = React.useState('en');
+            const [silverRate, setSilverRate] = React.useState('');
+            const [grossWeight, setGrossWeight] = React.useState('');
+            const [wastage, setWastage] = React.useState('10');
+            const [makingChargesValue, setMakingChargesValue] = React.useState('10');
+            const [additionalCharges, setAdditionalCharges] = React.useState('0');
+
+            const getDefaultMakingChargeRate = (weight) => {
+                if (weight <= 100) return 15;
+                if (weight <= 250) return 12;
+                return 10;
+            };
+
+            const calculatePrice = () => {
+                const weight = parseFloat(grossWeight) || 0;
+                const rate = parseFloat(silverRate) || 0;
+                const wastagePercent = parseFloat(wastage) || 0;
+                const making = parseFloat(makingChargesValue) || getDefaultMakingChargeRate(weight);
+                const additional = parseFloat(additionalCharges) || 0;
+
+                const baseSilverValue = weight * rate;
+                const wastageValue = (baseSilverValue * wastagePercent) / 100;
+                const makingChargesTotal = weight * making;
+                const totalPrice = baseSilverValue + wastageValue + makingChargesTotal + additional;
+
+                return {
+                    baseSilverValue: baseSilverValue.toFixed(2),
+                    wastageValue: wastageValue.toFixed(2),
+                    makingChargesTotal: makingChargesTotal.toFixed(2),
+                    makingRate: making,
+                    totalPrice: totalPrice.toFixed(2)
+                };
+            };
+
+            const result = calculatePrice();
+
+            return (
+                <div className="container">
+                    <div className="header">
+                        <div className="nav-buttons">
+                            <button
+                                className="nav-button"
+                                onClick={() => window.location.href = 'gold.html'}
+                            >
+                                Gold Calculator
+                            </button>
+                        </div>
+                        <img src="images/logo.jpeg" alt="Sai Akhila Jewellers Logo" />
+                        <h1>{translations[language].title}</h1>
+                        <p>{translations[language].address}</p>
+                        <button
+                            onClick={() => setLanguage(language === 'en' ? 'te' : 'en')}
+                            style={{
+                                backgroundColor: '#ffffff',
+                                color: '#2b1810',
+                                padding: '5px 10px',
+                                borderRadius: '4px',
+                                marginTop: '10px',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            {language === 'en' ? 'తెలుగు' : 'English'}
+                        </button>
+                    </div>
+
+                    <div className="card">
+                        <div className="input-group">
+                            <label>{translations[language].silverRate}</label>
+                            <input
+                                type="text"
+                                className="number-input"
+                                value={silverRate}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                    if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                        setSilverRate(value);
+                                    }
+                                }}
+                                placeholder={translations[language].psilverRate}
+                            />
+                        </div>
+
+                        <div className="input-group">
+                            <label>{translations[language].grossWeight}</label>
+                            <input
+                                type="text"
+                                className="number-input"
+                                value={grossWeight}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                    if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                        setGrossWeight(value);
+                                    }
+                                }}
+                                placeholder={translations[language].pgrossWeight}
+                            />
+                        </div>
+
+                        <div className="input-group">
+                            <label>{translations[language].wastage}</label>
+                            <input
+                                type="text"
+                                className="number-input"
+                                value={wastage}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                    if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                        setWastage(value);
+                                    }
+                                }}
+                                placeholder={translations[language].pwastage}
+                            />
+                        </div>
+
+                        <div className="input-group">
+                            <label>{translations[language].makingCharges}</label>
+                            <input
+                                type="text"
+                                className="number-input"
+                                value={makingChargesValue}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                    if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                        setMakingChargesValue(value);
+                                    }
+                                }}
+                                placeholder={translations[language].pmakingCharges}
+                            />
+                            <DefaultRateInfo />
+                        </div>
+
+                        <div className="input-group">
+                            <label>{translations[language].additionalCharges}</label>
+                            <input
+                                type="text"
+                                className="number-input"
+                                value={additionalCharges}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');
+                                    if (value === '' || (!isNaN(parseFloat(value)) && isFinite(value))) {
+                                        setAdditionalCharges(value);
+                                    }
+                                }}
+                                placeholder={translations[language].padditionalCharges}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="card results">
+                        <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+                            <div style={{
+                                backgroundColor: '#2b1810',
+                                padding: '10px',
+                                width: '100%',
+                                marginBottom: '7.5px'
+                            }}>
+                                <img
+                                    src="images/logo.jpeg"
+                                    alt="Sai Akhila Jewellers Logo"
+                                    style={{
+                                        width: '100px',
+                                        display: 'block',
+                                        margin: '0 auto'
+                                    }}
+                                />
+                            </div>
+                            <h2>{translations[language].priceEstimation}</h2>
+                            <p>{translations[language].date} {new Date().toLocaleDateString()}</p>
+                            <hr style={{ margin: '10px 0' }} />
+                        </div>
+
+                        <p>{translations[language].grossWeight} {grossWeight} grams</p>
+                        <p>{translations[language].silverValue} (₹{silverRate}/g): ₹{result.baseSilverValue}</p>
+                        <p>{translations[language].wastageValue} ₹{result.wastageValue} ({wastage}%)</p>
+                        <p>{translations[language].makingCharges} ₹{result.makingChargesTotal} ({result.makingRate}/gram)</p>
+                        <p>{translations[language].additionalCharges} ₹{additionalCharges}</p>
+                        <p className="total-price">{translations[language].totalPrice} ₹{result.totalPrice}</p>
+
+                        <div style={{ marginTop: '30px', borderTop: '1px solid #ddd', paddingTop: '20px' }}>
+                            <p style={{ textAlign: 'center' }}>{translations[language].thankYou}</p>
+                            <p style={{ textAlign: 'center' }}>{translations[language].address}</p>
+                            <p style={{ textAlign: 'center' }}>{translations[language].computerGenerated}</p>
+                        </div>
+
+                        <button
+                            className="print-button"
+                            onClick={() => window.print()}
+                            style={{ marginTop: '20px' }}
+                        >
+                            {translations[language].printEstimate}
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function App() {
+            return (
+                <div>
+                    <SilverPriceEstimator />
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
