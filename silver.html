@@ -531,11 +531,6 @@
             const [makingChargesValue, setMakingChargesValue] = React.useState('10');
             const [additionalCharges, setAdditionalCharges] = React.useState('0');
 
-            const getDefaultMakingChargeRate = (weight) => {
-                if (weight <= 100) return 15;
-                if (weight <= 250) return 12;
-                return 10;
-            };
 
             const calculatePrice = () => {
                 const weight = parseFloat(grossWeight) || 0;
