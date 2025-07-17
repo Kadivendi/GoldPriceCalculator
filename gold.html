@@ -564,9 +564,10 @@
             }
         };
         function App() {
+            const [language, setLanguage] = React.useState('en');
             return (
                 <div>
-                    <GoldPriceEstimator />
+                    <GoldPriceEstimator language={language} />
                 </div>
             );
         }
@@ -583,7 +584,7 @@
                                 <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Default Making Charges</div>
                                 • For weight ≤ 5g: ₹250/g<br />
                                 • For weight 5-10g: ₹150/g<br />
-                                • For weight > 10g: ₹120/g
+                                • For weight &gt; 10g: ₹120/g
                             </div>
                         </div>
                     )}
@@ -898,13 +899,107 @@
                             <p style={{ textAlign: 'center' }}>{translations[language].computerGenerated}</p>
                         </div>
 
-                        <button
-                            className="print-button"
-                            onClick={() => window.print()}
-                            style={{ marginTop: '20px' }}
-                        >
-                            {translations[language].printEstimate}
-                        </button>
+                        <div style={{ display: 'flex', gap: 10, marginTop: '20px' }}>
+                            <button
+                                className="print-button"
+                                onClick={() => window.print()}
+                                style={{ flex: 1 }}
+                            >
+                                Print PDF
+                            </button>
+                            <button
+                                className="print-button"
+                                onClick={() => {
+                                    // Generate formatted plain text content for 3-inch thermal paper
+                                    const currentDate = new Date().toLocaleDateString('en-IN');
+                                    const currentTime = new Date().toLocaleTimeString('en-IN', { 
+                                        hour: '2-digit', 
+                                        minute: '2-digit' 
+                                    });
+                                    
+                                    // Use translations for the selected language
+                                    const t = translations[language];
+                                    
+                                    let text = '';
+                                    text += '══════════════════════════════════════════════════════════════\n';
+                                    text += `  ${t.title.toUpperCase()}                                    \n`;
+                                    text += '                                                              \n';
+                                    text += `  ${t.address}                                                \n`;
+                                    text += '  Cell: 9948021254                                            \n';
+                                    text += '══════════════════════════════════════════════════════════════\n\n';
+                                    text += `                    ${t.priceEstimation.toUpperCase()}\n`;
+                                    text += '                    ════════════════════════════\n\n';
+                                    text += `${t.date} ${currentDate}              Time: ${currentTime}\n`;
+                                    text += `${t.tags} ${tag || 'N/A'}\n`;
+                                    text += '─'.repeat(70) + '\n\n';
+                                    
+                                    // Weight Details Section
+                                    text += 'WEIGHT DETAILS:\n';
+                                    text += '─'.repeat(20) + '\n';
+                                    text += `${t.grossWeight} ${grossWeight || '0'.padStart(8)} grams\n`;
+                                    text += `${t.netGoldWeight} ${result.netGoldWeight.padStart(8)} grams\n\n`;
+                                    
+                                    // Pricing Details Section
+                                    text += 'PRICING DETAILS:\n';
+                                    text += '─'.repeat(20) + '\n';
+                                    text += `${t.goldRate} ₹${(goldRate || 0).padStart(8)}/gram\n`;
+                                    text += `${t.goldValue}         ₹${result.baseGoldValue.padStart(12)}\n`;
+                                    text += `${t.wastageValue}     ₹${result.wastageValue.padStart(12)} (${wastage || 0}%)\n\n`;
+                                    
+                                    // Stone Details Section
+                                    text += `${t.stoneDetails}:\n`;
+                                    text += '─'.repeat(20) + '\n';
+                                    if (stones.length === 0) {
+                                        text += `${t.stones}: None\n`;
+                                    } else {
+                                        stones.forEach((stone, index) => {
+                                            const stoneTotal = (stone.weight * stone.price).toFixed(2);
+                                            const stoneName = t[stone.type] || stone.type;
+                                            text += `${(index + 1).toString().padStart(2)}. ${stoneName.padEnd(25)} ${stone.weight}g × ₹${stone.price}/g = ₹${stoneTotal.padStart(10)}\n`;
+                                        });
+                                        text += `${t.totalStonePrice.padEnd(35)}${result.totalStonePrice.padStart(12)}\n`;
+                                    }
+                                    text += '\n';
+                                    
+                                    // Charges Section
+                                    text += 'CHARGES:\n';
+                                    text += '─'.repeat(10) + '\n';
+                                    text += `${t.makingChargesTotal}     ₹${result.makingChargesTotal.padStart(12)} (₹${result.makingChargeRate}/g)\n`;
+                                    text += `${t.additionalCharges} ₹${(additionalCharges || '0').padStart(12)}\n\n`;
+                                    
+                                    // Total Section
+                                    text += '══════════════════════════════════════════════════════════════\n';
+                                    text += `                    ${t.totalPrice}: ₹${result.totalPrice.padStart(12)}                    \n`;
+                                    text += '══════════════════════════════════════════════════════════════\n\n';
+                                    
+                                    // Footer
+                                    text += '─'.repeat(70) + '\n';
+                                    text += `${t.thankYou}!\n`;
+                                    text += `${t.address}\n`;
+                                    text += `${t.computerGenerated}.\n`;
+                                    text += '─'.repeat(70) + '\n';
+                                    
+                                    // Generate filename with date and tag
+                                    const dateStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+                                    const tagStr = tag ? tag.replace(/[^a-zA-Z0-9]/g, '_') : 'estimate';
+                                    const filename = `GoldEstimate_${dateStr}_${tagStr}.txt`;
+                                    
+                                    // Download as .txt file
+                                    const blob = new Blob([text], { type: 'text/plain' });
+                                    const url = URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = filename;
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    document.body.removeChild(a);
+                                    URL.revokeObjectURL(url);
+                                }}
+                                style={{ flex: 1 }}
+                            >
+                                {language === 'en' ? 'Download TXT' : 'టెక్స్ట్ డౌన్‌లోడ్'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             );
